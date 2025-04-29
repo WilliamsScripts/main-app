@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export function setAuthCookie(response: NextResponse, accessToken: string) {
   const isLocal = process.env.NODE_ENV !== "production";
   response.cookies.set("access_token", accessToken, {
-    domain: isLocal ? "localhost" : ".shared-auth.vercel.app",
+    domain: isLocal ? "localhost" : ".vercel.app",
     path: "/",
     secure: !isLocal,
     httpOnly: false,
