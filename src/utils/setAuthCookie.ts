@@ -2,12 +2,18 @@ import { NextResponse } from "next/server";
 
 export function setAuthCookie(response: NextResponse, accessToken: string) {
   const isLocal = process.env.NODE_ENV !== "production";
-  console.log(
-    "Setting auth cookie for domain:",
-    isLocal ? "localhost" : ".vercel.app"
-  );
+  const domain =
+    process.env.NEXT_PUBLIC_COOKIE_DOMAIN ||
+    (isLocal ? "localhost" : ".vercel.app");
+
+  console.log("Setting auth cookie with config:", {
+    domain,
+    isLocal,
+    env: process.env.NODE_ENV,
+  });
+
   response.cookies.set("access_token", accessToken, {
-    domain: isLocal ? "localhost" : ".vercel.app",
+    domain,
     path: "/",
     secure: !isLocal,
     httpOnly: false,

@@ -7,7 +7,14 @@ export async function middleware(req: NextRequest) {
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
-    console.log("pizza Access token:", cookieStore, accessToken);
+    console.log("Middleware debug:", {
+      path: req.nextUrl.pathname,
+      hasAccessToken: !!accessToken,
+      isAuthRoute:
+        req.nextUrl.pathname.startsWith("/login") ||
+        req.nextUrl.pathname.startsWith("/register"),
+      env: process.env.NODE_ENV,
+    });
 
     // Check if the current path is an auth route
     const isAuthRoute =
@@ -16,6 +23,7 @@ export async function middleware(req: NextRequest) {
 
     // If no access token
     if (!accessToken) {
+      console.log("No access token found, checking route type");
       // If trying to access protected route, redirect to login
       if (!isAuthRoute) {
         const redirectUrl = `/login?redirect=${encodeURIComponent(
@@ -31,6 +39,11 @@ export async function middleware(req: NextRequest) {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
+    console.log("Verifying token with Supabase:", {
+      hasSupabaseUrl: !!supabaseUrl,
+      hasSupabaseKey: !!supabaseAnonKey,
+    });
+
     const supabase = createClient(supabaseUrl, supabaseAnonKey, {
       global: {
         headers: {
@@ -44,8 +57,14 @@ export async function middleware(req: NextRequest) {
       error,
     } = await supabase.auth.getUser();
 
+    console.log("Supabase auth response:", {
+      hasUser: !!user,
+      error: error?.message,
+    });
+
     // If token is invalid or user not found
     if (error || !user) {
+      console.log("Token verification failed:", error?.message);
       // If trying to access protected route, redirect to login
       if (!isAuthRoute) {
         const redirectUrl = `/login?redirect=${encodeURIComponent(
