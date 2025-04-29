@@ -4,7 +4,6 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import Cookies from "js-cookie";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -27,16 +26,6 @@ export default function Login() {
       });
 
       if (error) throw error;
-
-      Cookies.set("access_token", data.session.access_token, {
-        domain: "main-app-blush.vercel.app",
-      });
-      Cookies.set("access_token", data.session.access_token, {
-        domain: "second-app-rho.vercel.app",
-      });
-      Cookies.set("access_token", data.session.access_token, {
-        domain: "instant-reload.vercel.app",
-      });
 
       // Call the session API endpoint to set the cookie
       const response = await fetch("/api/auth/session", {

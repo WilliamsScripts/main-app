@@ -11,12 +11,18 @@ export function setAuthCookie(response: NextResponse, accessToken: string) {
     accessToken,
   });
 
-  response.cookies.set("access_token", accessToken, {
-    domain,
-    path: "/",
-    secure: !isLocal,
-    httpOnly: false,
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+  const domains = isLocal
+    ? ["localhost"]
+    : ["main-app-blush.vercel.app", "second-app-rho.vercel.app"];
+
+  domains.forEach((domain) => {
+    response.cookies.set("access_token", accessToken, {
+      domain,
+      path: "/",
+      secure: !isLocal,
+      httpOnly: false,
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
   });
 }
