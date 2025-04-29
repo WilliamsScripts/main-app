@@ -14,8 +14,8 @@ export function setAuthCookie(response: NextResponse, accessToken: string) {
   response.cookies.set("access_token", accessToken, {
     domain,
     path: "/",
-    secure: false,
-    httpOnly: false,
+    secure: true,
+    httpOnly: true,
     sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7, // 7 days
   });
