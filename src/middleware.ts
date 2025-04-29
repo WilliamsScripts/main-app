@@ -7,6 +7,7 @@ export async function middleware(req: NextRequest) {
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("access_token")?.value;
+    console.log("pizza Access token:", cookieStore, accessToken);
 
     // Check if the current path is an auth route
     const isAuthRoute =
@@ -91,6 +92,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - api/auth (auth API endpoints)
      */
-    "/((?!_next/static|_next/image|favicon.ico|api/auth).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/auth|public).*)",
   ],
 };
