@@ -10,6 +10,7 @@ export function setAuthCookie(response: NextResponse, accessToken: string) {
     domain,
     isLocal,
     env: process.env.NODE_ENV,
+    accessToken,
   });
 
   response.cookies.set("access_token", accessToken, {
